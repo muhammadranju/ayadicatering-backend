@@ -7,6 +7,10 @@ const categorySchema = new Schema<ICategory>(
       type: String,
       required: true,
     },
+    nameArabic: {
+      type: String,
+      required: true,
+    },
     image: {
       type: String,
       required: true,

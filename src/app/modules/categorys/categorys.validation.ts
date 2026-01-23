@@ -1,8 +1,11 @@
 import { z } from 'zod';
 
 const createCategoryValidation = z.object({
-  name: z.string(),
-  image: z.string(),
+  body: z.object({
+    name: z.string().describe('Name is required'),
+    nameArabic: z.string().describe('NameArabic is required'),
+    image: z.string().optional(),
+  }),
 });
 
 export { createCategoryValidation };
