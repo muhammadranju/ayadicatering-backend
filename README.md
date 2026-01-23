@@ -1,114 +1,139 @@
-# Project Name
+# 🧑‍🍳 Ayadi Catering Backend
 
-This is a template project for backend development using Typescript, Node.js, Express, Mongoose, Bcrypt, JWT, NodeMailer, Multer, ESLint, and Prettier. The aim is to reduce setup time for new backend projects.
+A robust and scalable backend API for the **Ayadi Catering** platform — built with **TypeScript**, **Node.js**, **Express**, and **Mongoose**. This backend provides secure authentication, file uploads, email delivery, logging, and data validation to support the catering application.
 
-## Features
+---
 
-- **Authentication API:** Complete authentication system using JWT for secure token-based authentication and bcrypt for password hashing.
-- **File Upload:** Implemented using Multer with efficient file handling and short-term storage.
-- **Data Validation:** Robust data validation using Zod and Mongoose schemas.
-- **Code Quality:** Ensured code readability and quality with ESLint and Prettier.
-- **Email Service:** Sending emails through NodeMailer.
-- **File Handling:** Efficient file deletion using `fs.unlink`.
-- **Environment Configuration:** Easy configuration using a `.env` file.
-- **Logging:** Logging with Winston and file rotation using DailyRotateFile.
-- **API Request Logging:** Logging API requests using Morgan.
+## 🛠️ Features
 
-## Tech Stack
+- 🔐 **Authentication System**  
+  JWT-based authentication with bcrypt password hashing.
 
-- Typescript
-- Node.js
-- Express
-- Mongoose
-- Bcrypt
-- JWT
-- NodeMailer
-- Multer
-- ESLint
-- Prettier
-- Winston
-- Daily-winston-rotate-file
-- Morgen
-- Socket
+- 📁 **File Upload Support**  
+  Efficient file handling using Multer.
 
-## Getting Started
+- 📬 **Email Service**  
+  Supports email sending using NodeMailer.
 
-Follow these steps to set up and run the project locally.
+- 📊 **Data Validation**  
+  Uses Zod and Mongoose for strong schema validation.
 
-### Prerequisites
+- 🧹 **Code Quality Tools**  
+  ESLint and Prettier ensure consistent and maintainable code.
 
-Ensure you have the following installed:
+- 📝 **Request & Error Logging**  
+  Logs via Winston and daily rotating files, plus HTTP request logging with Morgan.
 
-- Node.js
-- npm or yarn
+---
 
-### Installation
+## 🚀 Tech Stack
 
-1. **Clone the repository:**
+| Category       | Technology         |
+| -------------- | ------------------ |
+| Language       | TypeScript         |
+| Runtime        | Node.js            |
+| Framework      | Express            |
+| ORM/Database   | Mongoose (MongoDB) |
+| Authentication | JWT & bcrypt       |
+| Email          | NodeMailer         |
+| File Upload    | Multer             |
+| Logging        | Winston & Morgan   |
+| Code Quality   | ESLint, Prettier   |
 
-   ```bash
-   git clone https://github.com/yourusername/your-repository.git
-   cd your-repository
-   ```
+---
 
-2. **Install dependencies:**
+## 📦 Getting Started
 
-   Using npm:
+Follow these steps to run the project locally:
 
-   ```bash
-   npm install
-   ```
-
-   Using yarn:
-
-   ```bash
-   yarn install
-   ```
-
-3. **Create a `.env` file:**
-
-   In the root directory of the project, create a `.env` file and add the following variables. Adjust the values according to your setup.
-
-   ```env
-   # Basic
-   NODE_ENV=development
-   DATABASE_URL=mongodb://127.0.0.1:27017/project_name
-   IP_ADDRESS=10.10.7.101
-   PORT=5000
-   #Bcrypt
-   BCRYPT_SALT_ROUNDS=12
-   #JWT
-   JWT_SECRET=jwt_secret
-   #Email
-   EMAIL_FROM=email@gmail.com
-   EMAIL_USER=email@gmail.com
-   EMAIL_PASS=mkqcfjeqloothyax
-   EMAIL_PORT=587
-   EMAIL_HOST=smtp.gmail.com
-   SUPER_ADMIN_EMAIL=admin@gmail.com
-   SUPER_ADMIN_PASSWORD=12345678
-   ```
-
-4. **Run the project:**
-
-   Using npm:
-
-   ```bash
-   npm run dev
-   ```
-
-   Using yarn:
-
-   ```bash
-   yarn run dev
-   ```
-
-### Running the Tests
-
-Explain how to run the automated tests for this system.
+### 🔧 1. Clone the repository
 
 ```bash
-npm test
+git clone https://github.com/muhammadranju/ayadicatering-backend.git
+cd ayadicatering-backend
 ```
 
-# TS-Template
+### 📥 2. Install dependencies
+
+```bash
+bun install
+```
+
+or with bun:
+
+```bash
+bun install
+```
+
+### 📄 3. Create `.env` file
+
+In the root of the project, add a `.env` file and configure:
+
+```
+NODE_ENV=development
+PORT=5000
+DATABASE_URL=<your_mongodb_connection_string>
+JWT_SECRET=<your_jwt_secret>
+EMAIL_HOST=<smtp_host>
+EMAIL_PORT=<smtp_port>
+EMAIL_USER=<email_user>
+EMAIL_PASS=<email_password>
+```
+
+Replace values with your actual configuration.
+
+### ▶️ 4. Run the backend
+
+**Development mode:**
+
+```bash
+bun run dev
+```
+
+**Production mode:**
+
+```bash
+bun start
+```
+
+---
+
+## 🧪 Development & Testing
+
+You can add automated tests using your preferred testing tools (e.g., Jest or Mocha). Detail test commands here once implemented.
+
+---
+
+## 📍 Project Structure
+
+- `/src` – Main source code
+- `/src/controllers` – HTTP request handlers
+- `/src/models` – Mongoose models and schemas
+- `/src/routes` – Express route handlers
+- `/src/middleware` – Middleware functions
+- `/src/utils` – Logging, validation, helpers
+
+---
+
+## 🧩 API Overview
+
+This backend exposes RESTful endpoints — e.g.,
+
+| Endpoint         | Method | Description         |
+| ---------------- | ------ | ------------------- |
+| `/auth/register` | POST   | Register a new user |
+| `/auth/login`    | POST   | Authenticate user   |
+| `/upload`        | POST   | Upload file         |
+| `/email/send`    | POST   | Send email          |
+
+> Provide full API documentation (Swagger or Postman) here if available.
+
+## 📄 License
+
+This project is open-source and available under the **MIT License**.
+
+---
+
+## 💬 Contact
+
+For questions or support, reach out via GitHub Issues or email.
