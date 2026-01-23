@@ -29,7 +29,7 @@ const buildPackageSchema = new Schema<IBuildPackage>(
     },
     isAvailable: {
       type: Boolean,
-      required: true,
+      default: true,
     },
     categoryId: {
       type: Schema.Types.ObjectId,

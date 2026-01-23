@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import IOrder from './orders.interface';
+import { IOrder, EStatus } from './orders.interface';
 
 const orderSchema = new Schema<IOrder>(
   {
@@ -30,8 +30,8 @@ const orderSchema = new Schema<IOrder>(
     },
     status: {
       type: String,
-      required: true,
-      default: 'in_progress',
+      enum: EStatus,
+      default: EStatus.pending,
     },
   },
   {

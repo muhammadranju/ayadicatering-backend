@@ -1,4 +1,4 @@
-interface IOrder {
+export interface IOrder {
   person: string;
 
   menu: string;
@@ -6,7 +6,11 @@ interface IOrder {
   itemName: string;
   items: string[];
   totalPrice: number;
-  status: string;
+  status: EStatus;
 }
 
-export default IOrder;
+export enum EStatus {
+  pending = 'pending',
+  completed = 'completed',
+  cancelled = 'cancelled',
+}

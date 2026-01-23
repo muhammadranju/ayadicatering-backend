@@ -34,14 +34,14 @@ const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
   };
   await User.findOneAndUpdate(
     { _id: createUser._id },
-    { $set: { authentication } }
+    { $set: { authentication } },
   );
 
   return createUser;
 };
 
 const getUserProfileFromDB = async (
-  user: JwtPayload
+  user: JwtPayload,
 ): Promise<Partial<IUser>> => {
   const { id } = user;
   const isExistUser = await User.isExistUserById(id);
@@ -54,10 +54,11 @@ const getUserProfileFromDB = async (
 
 const updateProfileToDB = async (
   user: JwtPayload,
-  payload: Partial<IUser>
+  payload: Partial<IUser>,
 ): Promise<Partial<IUser | null>> => {
   const { id } = user;
   const isExistUser = await User.isExistUserById(id);
+
   if (!isExistUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
