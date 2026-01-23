@@ -10,7 +10,6 @@ const createSetPackageValidation = z.object({
   itemsArabic: z.array(z.string()),
   price: z.number(),
   person: z.number(),
-  isAvailable: z.boolean(),
 });
 
 export { createSetPackageValidation };

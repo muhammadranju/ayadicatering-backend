@@ -41,7 +41,7 @@ const setPackageSchema = new Schema<ISetPackage>(
     },
     isAvailable: {
       type: Boolean,
-      required: true,
+      default: true,
     },
   },
   {
