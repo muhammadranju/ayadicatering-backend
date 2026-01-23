@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { FilterQuery, Query } from 'mongoose';
+import mongoose, { Query } from 'mongoose';
 
 class QueryBuilder<T> {
   public modelQuery: Query<T[], T>;
@@ -21,7 +21,7 @@ class QueryBuilder<T> {
                 $regex: this.query.searchTerm,
                 $options: 'i',
               },
-            } as FilterQuery<T>)
+            }) as any,
         ),
       });
     }
@@ -34,7 +34,7 @@ class QueryBuilder<T> {
     const excludeFields = ['searchTerm', 'sort', 'page', 'limit', 'fields'];
     excludeFields.forEach(el => delete queryObj[el]);
 
-    this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+    this.modelQuery = this.modelQuery.find(queryObj as any);
     return this;
   }
 
@@ -72,7 +72,7 @@ class QueryBuilder<T> {
       populateFields.map(field => ({
         path: field,
         select: selectFields[field],
-      }))
+      })),
     );
     return this;
   }
@@ -80,7 +80,7 @@ class QueryBuilder<T> {
   //pagination information
   async getPaginationInfo() {
     const total = await this.modelQuery.model.countDocuments(
-      this.modelQuery.getFilter()
+      this.modelQuery.getFilter(),
     );
     const limit = Number(this?.query?.limit) || 10;
     const page = Number(this?.query?.page) || 1;
