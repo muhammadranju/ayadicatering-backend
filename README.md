@@ -128,10 +128,6 @@ This backend exposes RESTful endpoints — e.g.,
 
 > Provide full API documentation (Swagger or Postman) here if available.
 
-## 📄 License
-
-This project is open-source and available under the **MIT License**.
-
 ---
 
 ## 💬 Contact
