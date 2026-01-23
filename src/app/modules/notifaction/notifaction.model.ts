@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
+import { INotification } from './notifaction.interface';
 
-const notifactionSchema = new Schema<INotifaction>(
+const notifactionSchema = new Schema<INotification>(
   {
     type: {
       type: String,
@@ -21,6 +22,6 @@ const notifactionSchema = new Schema<INotifaction>(
   },
 );
 
-const Notifaction = model<INotifaction>('Notifaction', notifactionSchema);
+const Notifaction = model<INotification>('Notifaction', notifactionSchema);
 
 export default Notifaction;
