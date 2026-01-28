@@ -12,8 +12,13 @@ const getAllBuildPackageFromDB = async (
   paginationOptions: IPaginationOptions,
   category: string,
 ) => {
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelper.calculatePagination(paginationOptions);
+  const {
+    page,
+    limit,
+    skip,
+    sortBy,
+    sortOrder = 'asc',
+  } = paginationHelper.calculatePagination(paginationOptions);
 
   const result = await BuildPackage.find(
     category ? { categoryId: category } : {},
@@ -30,6 +35,8 @@ const getAllBuildPackageFromDB = async (
       page,
       limit,
       total,
+      sortBy,
+      sortOrder,
     },
     data: result,
   };
