@@ -7,6 +7,7 @@ import { BuildPackageRoutes } from '../app/modules/buildPackage/buildPackage.rou
 import { SetPackageRoutes } from '../app/modules/setPackage/setPackage.route';
 import { OrderRoutes } from '../app/modules/orders/orders.route';
 import { NotifactionRoutes } from '../app/modules/notifaction/notifaction.route';
+import { DeliveryTimeSlotRoutes } from '../app/modules/deliveryTimeSlot/deliveryTimeSlot.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -45,6 +46,11 @@ const apiRoutes = [
   {
     path: '/notifications',
     route: NotifactionRoutes,
+  },
+
+  {
+    path: '/delivery-slots',
+    route: DeliveryTimeSlotRoutes,
   },
 ];
 
