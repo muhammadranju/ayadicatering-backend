@@ -35,10 +35,10 @@ const setPackageSchema = new Schema<ISetPackage>(
       type: Number,
       required: true,
     },
-    person: {
-      type: Number,
-      required: true,
-    },
+    // person: {
+    //   type: Number,
+    //   required: true,
+    // },
     isAvailable: {
       type: Boolean,
       default: true,
