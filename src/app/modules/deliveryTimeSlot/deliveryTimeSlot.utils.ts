@@ -97,3 +97,26 @@ export const normalizeDate = (date: Date): Date => {
   normalized.setHours(0, 0, 0, 0);
   return normalized;
 };
+
+/**
+ * Convert time string (HH:mm) to minutes
+ */
+export const convertTimeToMinutes = (time: string): number => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+/**
+ * Check if two time slots overlap
+ */
+export const isSlotOverlapping = (
+  slot1: { startTime: string; endTime: string },
+  slot2: { startTime: string; endTime: string },
+): boolean => {
+  const start1 = convertTimeToMinutes(slot1.startTime);
+  const end1 = convertTimeToMinutes(slot1.endTime);
+  const start2 = convertTimeToMinutes(slot2.startTime);
+  const end2 = convertTimeToMinutes(slot2.endTime);
+
+  return start1 < end2 && start2 < end1;
+};

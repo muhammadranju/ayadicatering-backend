@@ -6,14 +6,32 @@ import Order from './orders.model';
 /**
  * Create a new order (SET_PACKAGE or BUILD_YOUR_OWN)
  */
+import { Types } from 'mongoose';
+import BuildPackage from '../buildPackage/buildPackage.model';
+
+// Helper to populate addons
+const populateAddons = async (order: any) => {
+  if (!order.addons || !order.addons.length) return order;
+
+  const populatedAddons = await Promise.all(
+    order.addons.map(async (addon: string) => {
+      // Check if it's a valid ObjectId
+      if (Types.ObjectId.isValid(addon)) {
+        const item = await BuildPackage.findById(addon).lean();
+        return item || addon;
+      }
+      return addon;
+    }),
+  );
+
+  return { ...order, addons: populatedAddons };
+};
+
 const createOrderToDB = async (orderData: IOrder) => {
   const order = await Order.create(orderData);
   return order;
 };
 
-/**
- * Get all orders with pagination and filtering
- */
 const getAllOrdersFromDB = async (
   paginationOptions: IPaginationOptions,
   filters?: {
@@ -34,7 +52,6 @@ const getAllOrdersFromDB = async (
 
   const query: any = {};
 
-  // Apply filters
   if (filters?.orderType) {
     query.orderType = filters.orderType;
   }
@@ -64,9 +81,14 @@ const getAllOrdersFromDB = async (
     .populate('userId', 'name email')
     .sort({ [sortBy]: sortOrder })
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .lean();
 
   const total = await Order.countDocuments(query);
+
+  const dataWithAddons = await Promise.all(
+    result.map(order => populateAddons(order)),
+  );
 
   return {
     meta: {
@@ -76,34 +98,28 @@ const getAllOrdersFromDB = async (
       sortBy,
       sortOrder,
     },
-    data: result,
+    data: dataWithAddons,
   };
 };
 
-/**
- * Get a single order by ID
- */
 const getSingleOrderFromDB = async (id: string) => {
   const order = await Order.findById(id)
     .populate('menuSelection.salad')
     .populate('menuSelection.appetizers')
     .populate('menuSelection.mains')
-    .populate('userId', 'name email');
+    .populate('userId', 'name email')
+    .lean();
 
-  return order;
+  if (!order) return null;
+
+  return populateAddons(order);
 };
 
-/**
- * Update order status
- */
 const updateOrderStatusToDB = async (id: string, status: EStatus) => {
   const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
   return order;
 };
 
-/**
- * Update entire order
- */
 const updateOrderToDB = async (id: string, updateData: Partial<IOrder>) => {
   const order = await Order.findByIdAndUpdate(id, updateData, {
     new: true,
@@ -112,30 +128,26 @@ const updateOrderToDB = async (id: string, updateData: Partial<IOrder>) => {
   return order;
 };
 
-/**
- * Delete an order
- */
 const deleteOrderFromDB = async (id: string) => {
   const order = await Order.findByIdAndDelete(id);
   return order;
 };
 
-/**
- * Get orders by email
- */
 const getOrdersByEmailFromDB = async (email: string) => {
   const orders = await Order.find({ 'deliveryDetails.email': email })
     .sort({ timestamp: -1 })
     .populate('menuSelection.salad')
     .populate('menuSelection.appetizers')
-    .populate('menuSelection.mains');
+    .populate('menuSelection.mains')
+    .lean();
 
-  return orders;
+  const ordersWithAddons = await Promise.all(
+    orders.map(order => populateAddons(order)),
+  );
+
+  return ordersWithAddons;
 };
 
-/**
- * Get order statistics
- */
 const getOrderStatsFromDB = async () => {
   const totalOrders = await Order.countDocuments();
   const pendingOrders = await Order.countDocuments({ status: EStatus.pending });
@@ -164,17 +176,11 @@ const getOrderStatsFromDB = async () => {
   };
 };
 
-/**
- * Get orders list by date
- */
 const getOrdersByDateFromDB = async (date: string) => {
   const queryDate = new Date(date);
-
-  // Set start of the day (00:00:00)
   const startOfDay = new Date(queryDate);
   startOfDay.setHours(0, 0, 0, 0);
 
-  // Set end of the day (23:59:59)
   const endOfDay = new Date(queryDate);
   endOfDay.setHours(23, 59, 59, 999);
 
@@ -187,38 +193,39 @@ const getOrdersByDateFromDB = async (date: string) => {
     .populate('menuSelection.salad')
     .populate('menuSelection.appetizers')
     .populate('menuSelection.mains')
-    .populate('userId', 'name email');
+    .populate('userId', 'name email')
+    .lean();
+
+  const ordersWithAddons = await Promise.all(
+    orders.map(order => populateAddons(order)),
+  );
 
   return {
     date,
-    total: orders.length,
-    data: orders,
+    total: ordersWithAddons.length,
+    data: ordersWithAddons,
   };
 };
 
-/**
- * Get revenue analytics (monthly)
- */
 const getRevenueAnalyticsFromDB = async (year: number) => {
-  const startDate = new Date(year, 0, 1); // Jan 1st
-  const endDate = new Date(year, 11, 31, 23, 59, 59); // Dec 31st
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31, 23, 59, 59);
 
   const result = await Order.aggregate([
     {
       $match: {
         'dateTime.date': { $gte: startDate, $lte: endDate },
-        status: { $ne: EStatus.cancelled }, // Exclude cancelled orders
+        status: { $ne: EStatus.cancelled },
       },
     },
     {
       $group: {
-        _id: { $month: '$dateTime.date' }, // 1-12
+        _id: { $month: '$dateTime.date' },
         totalRevenue: { $sum: '$pricing.total' },
       },
     },
   ]);
 
-  // Format data for chart
   const months = [
     'JAN',
     'FEB',

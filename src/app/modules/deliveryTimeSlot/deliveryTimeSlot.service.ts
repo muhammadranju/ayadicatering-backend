@@ -8,6 +8,7 @@ import {
   checkTimeSlotOverlap,
   generateDefaultTimeSlots,
   isDateInPast,
+  isSlotOverlapping,
   isStartTimeBeforeEndTime,
   normalizeDate,
   validateDateRange,
@@ -117,19 +118,19 @@ const blockTimeSlotsInDB = async (
 
   // Block the specified time slots
   for (const newSlot of timeSlots) {
-    const existingSlotIndex = deliverySlot.timeSlots.findIndex(
-      slot =>
-        slot.startTime === newSlot.startTime &&
-        slot.endTime === newSlot.endTime,
-    );
+    let hasOverlap = false;
 
-    if (existingSlotIndex !== -1) {
-      // Update existing slot
-      deliverySlot.timeSlots[existingSlotIndex].isBlocked = true;
-      deliverySlot.timeSlots[existingSlotIndex].blockedReason =
-        newSlot.reason || 'Blocked';
-    } else {
-      // Add new slot
+    // Check against existing slots
+    deliverySlot.timeSlots.forEach(slot => {
+      if (isSlotOverlapping(slot, newSlot)) {
+        slot.isBlocked = true;
+        slot.blockedReason = newSlot.reason || 'Blocked';
+        hasOverlap = true;
+      }
+    });
+
+    if (!hasOverlap) {
+      // Add new slot only if it doesn't overlap with any existing slot
       deliverySlot.timeSlots.push({
         startTime: newSlot.startTime,
         endTime: newSlot.endTime,
@@ -192,15 +193,13 @@ const unblockTimeSlotsInDB = async (
   }
 
   // Unblock the specified time slots
-  for (const slot of timeSlots) {
-    const existingSlotIndex = deliverySlot.timeSlots.findIndex(
-      s => s.startTime === slot.startTime && s.endTime === slot.endTime,
-    );
-
-    if (existingSlotIndex !== -1) {
-      deliverySlot.timeSlots[existingSlotIndex].isBlocked = false;
-      deliverySlot.timeSlots[existingSlotIndex].blockedReason = undefined;
-    }
+  for (const slotToUnblock of timeSlots) {
+    deliverySlot.timeSlots.forEach(slot => {
+      if (isSlotOverlapping(slot, slotToUnblock)) {
+        slot.isBlocked = false;
+        slot.blockedReason = undefined;
+      }
+    });
   }
 
   // Check if all slots are now unblocked
