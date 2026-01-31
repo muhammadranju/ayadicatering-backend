@@ -31,7 +31,7 @@ app.use(
     origin: [
       'https://www.ayadicatering.com',
       'https://ayadicatering.com',
-
+      'https://ayadicatering.vercel.app',
       'http://localhost:3000',
       'http://localhost:3001',
       'http://10.10.7.101:3000',
