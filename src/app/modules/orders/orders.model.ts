@@ -24,6 +24,10 @@ const dateTimeSchema = new Schema(
 // Sub-schema for Delivery Details
 const deliveryDetailsSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     street: {
       type: String,
       required: true,

@@ -8,6 +8,7 @@ import Order from './orders.model';
  */
 import { Types } from 'mongoose';
 import BuildPackage from '../buildPackage/buildPackage.model';
+import { NotificationService } from '../notifaction/notifaction.service';
 
 // Helper to populate addons
 const populateAddons = async (order: any) => {
@@ -29,6 +30,20 @@ const populateAddons = async (order: any) => {
 
 const createOrderToDB = async (orderData: IOrder) => {
   const order = await Order.create(orderData);
+
+  // Create notification for admin
+  await NotificationService.createNotificationToDB({
+    type: 'new_order',
+    message: `New order placed by ${orderData.deliveryDetails.name}`,
+    isRead: false,
+    data: {
+      orderId: order._id,
+      name: orderData.deliveryDetails.name,
+      time: new Date().toISOString(), // Order placement time
+      deliveryTime: `${orderData.dateTime.date} at ${orderData.dateTime.time}`,
+    },
+  });
+
   return order;
 };
 

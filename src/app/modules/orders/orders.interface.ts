@@ -54,6 +54,7 @@ export interface IDateTime {
 
 // Delivery Details Structure
 export interface IDeliveryDetails {
+  name: string;
   street: string;
   city: string;
   area: string;
