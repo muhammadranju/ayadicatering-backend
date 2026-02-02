@@ -8,6 +8,7 @@ import { SetPackageRoutes } from '../app/modules/setPackage/setPackage.route';
 import { OrderRoutes } from '../app/modules/orders/orders.route';
 import { NotifactionRoutes } from '../app/modules/notifaction/notifaction.route';
 import { DeliveryTimeSlotRoutes } from '../app/modules/deliveryTimeSlot/deliveryTimeSlot.route';
+import { PaymentRoutes } from '../app/modules/payments/payment.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -51,6 +52,10 @@ const apiRoutes = [
   {
     path: '/delivery-slots',
     route: DeliveryTimeSlotRoutes,
+  },
+  {
+    path: '/payments',
+    route: PaymentRoutes,
   },
 ];
 

@@ -5,6 +5,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
   ip_address: process.env.IP_ADDRESS,
+  base_url: process.env.BASE_URL,
   database_url: process.env.DATABASE_URL,
   node_env: process.env.NODE_ENV,
   port: process.env.PORT,
@@ -24,5 +25,10 @@ export default {
   super_admin: {
     email: process.env.SUPER_ADMIN_EMAIL,
     password: process.env.SUPER_ADMIN_PASSWORD,
+  },
+  paytabs: {
+    server_key: process.env.PAYTABS_SERVER_KEY,
+    profile_id: process.env.PAYTABS_PROFILE_ID,
+    region: process.env.PAYTABS_REG,
   },
 };
