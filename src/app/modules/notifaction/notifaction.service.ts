@@ -40,8 +40,27 @@ const deleteNotificationFromDB = async (id: string) => {
   return result;
 };
 
+const createNotificationToDB = async (data: INotification) => {
+  const result = await Notification.create(data);
+  return result;
+};
+
+const markAllAsReadService = async () => {
+  const result = await Notification.updateMany(
+    {},
+    {
+      $set: {
+        isRead: true,
+      },
+    },
+  );
+  return result;
+};
+
 export const NotificationService = {
   getAllNotificationFromDB,
   updateNotificationToDB,
   deleteNotificationFromDB,
+  createNotificationToDB,
+  markAllAsReadService,
 };

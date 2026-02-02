@@ -16,6 +16,9 @@ const notifactionSchema = new Schema<INotification>(
       required: true,
       default: false,
     },
+    data: {
+      type: Schema.Types.Mixed,
+    },
   },
   {
     timestamps: true,
