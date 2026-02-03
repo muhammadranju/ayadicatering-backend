@@ -9,6 +9,10 @@ import Order from './orders.model';
 import { Types } from 'mongoose';
 import BuildPackage from '../buildPackage/buildPackage.model';
 import { NotificationService } from '../notifaction/notifaction.service';
+import DeliveryTimeSlot from '../deliveryTimeSlot/deliveryTimeSlot.model';
+import { normalizeDate } from '../deliveryTimeSlot/deliveryTimeSlot.utils';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
 // Helper to populate addons
 const populateAddons = async (order: any) => {
@@ -29,6 +33,35 @@ const populateAddons = async (order: any) => {
 };
 
 const createOrderToDB = async (orderData: IOrder) => {
+  // Validate if the selected date or time slot is blocked
+  const { date, time } = orderData.dateTime;
+  const normalizedDate = normalizeDate(new Date(date));
+
+  const deliverySlot = await DeliveryTimeSlot.findOne({
+    date: normalizedDate,
+  });
+
+  if (deliverySlot) {
+    if (deliverySlot.isFullDayBlocked) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        `The selected date ${date} is not available for orders. Reason: ${deliverySlot.blockedReason || 'Blocked'}`,
+      );
+    }
+
+    // Check if specific time slot is blocked
+    // Assuming time is in "HH:mm" format (24h) or matches the slot startTime
+    // If the frontend sends 12-hour format with AM/PM, we might need conversion.
+    // But assuming consistency for now.
+    const slot = deliverySlot.timeSlots.find(s => s.startTime === time);
+    if (slot && slot.isBlocked) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        `The selected time slot ${time} is not available. Reason: ${slot.blockedReason || 'Blocked'}`,
+      );
+    }
+  }
+
   const order = await Order.create(orderData);
 
   // Create notification for admin
