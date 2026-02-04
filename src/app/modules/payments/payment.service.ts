@@ -28,6 +28,7 @@ const initiatePayment = async (payload: {
     city: string;
     state: string;
     country: string;
+    region: string;
     zip: string;
   };
 }) => {
@@ -67,6 +68,7 @@ const initiatePayment = async (payload: {
     customerDetails.city || 'NA',
     customerDetails.state || 'NA',
     customerDetails.country || 'SA',
+    customerDetails.region || 'NA',
     customerDetails.zip || '00000',
     '127.0.0.1', // IP address - ideally get from request
   ];
