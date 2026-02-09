@@ -55,8 +55,7 @@ app.get('/', (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message:
-      'Beep-beep! The server is alive and kicking. If this is work the I am so happy!',
+    message: 'Beep-beep! The server is alive and kicking. Ranju',
     data: date,
   });
 });
