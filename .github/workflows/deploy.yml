@@ -18,13 +18,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.13.1"
-          cache: "bun"
+          cache: "npm"
 
       - name: Install dependencies
-        run: bun ci
+        run: npm ci
 
       - name: Build TypeScript
-        run: bun run build
+        run: npm run build
 
       - name: Create deployment package (without node_modules)
         run: |
@@ -102,7 +102,7 @@ jobs:
             # Install production dependencies on the server
             echo ""
             echo "Installing production dependencies..."
-            bun ci
+            npm ci
             
             # Create .env file if needed (only on first deploy)
             if [ ! -f .env ]; then
@@ -182,7 +182,7 @@ jobs:
             if [ -n "$latest_backup" ]; then
               echo "Found backup: $latest_backup"
               tar -xzf "$latest_backup" -C /var/www/ayadicatering-backend
-              bun ci
+              npm ci
               pm2 reload ecosystem.config.cjs
               echo "✅ Rolled back to previous version"
             else
